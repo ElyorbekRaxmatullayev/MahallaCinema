@@ -1,0 +1,114 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                String             @id @default(cuid())
+  telegramId        String             @unique
+  firstName         String?
+  photoUrl          String?
+  balance           Int                @default(0)
+  createdAt         DateTime           @default(now())
+  bookings          Booking[]
+  favorites         Favorite[]
+  notificationReads NotificationRead[]
+}
+
+model Event {
+  id                String     @id @default(cuid())
+  title             String
+  description       String?
+  date              DateTime
+  time              String
+  posterUrl         String?
+  isFootball        Boolean    @default(false)
+  
+  // Inventory and Pricing
+  totalPoufs        Int        @default(50)
+  availablePoufs    Int        @default(50)
+  poufPrice         Int        @default(80000)
+  
+  totalTapchans     Int        @default(10)
+  availableTapchans Int        @default(10)
+  tapchanPrice      Int        @default(320000)
+
+  createdAt         DateTime   @default(now())
+  bookings          Booking[]
+  favorites         Favorite[]
+}
+
+model Booking {
+  id               String     @id @default(cuid())
+  userId           String
+  user             User       @relation(fields: [userId], references: [id])
+  eventId          String
+  event            Event      @relation(fields: [eventId], references: [id])
+  zone             String     // "pouf" or "tapchan"
+  quantity         Int        @default(1)
+  totalPrice       Int        @default(0)
+  status           String     @default("CONFIRMED") // CONFIRMED | AWAITING_PAYMENT | COMPLETED | CANCELLED
+  scannedAt        DateTime?
+  promoCodeId      String?
+  promoCode        PromoCode? @relation(fields: [promoCodeId], references: [id])
+  customerName     String?
+  customerPhone    String?
+  provider         String?    // "CLICK" | "PAYME", null when no invoice was needed
+  bonusApplied     Int        @default(0) // snapshotted at reservation, applied to User.balance only on successful_payment
+  telegramChargeId String?
+  providerChargeId String?
+  paidAt           DateTime?
+  createdAt        DateTime   @default(now())
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, eventId])
+}
+
+model Notification {
+  id          String             @id @default(cuid())
+  title       String
+  description String?
+  photoUrl    String?
+  scheduledAt DateTime           // send/display time; never included in the Telegram message text
+  status      String             @default("PENDING") // PENDING | SENT
+  sentAt      DateTime?
+  createdAt   DateTime           @default(now())
+  reads       NotificationRead[]
+}
+
+model NotificationRead {
+  id             String       @id @default(cuid())
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  notificationId String
+  notification   Notification @relation(fields: [notificationId], references: [id])
+  readAt         DateTime     @default(now())
+
+  @@unique([userId, notificationId])
+}
+
+model PromoCode {
+  id        String    @id @default(cuid())
+  code      String    @unique
+  type      String    // "PERCENT" | "FIXED"
+  value     Int
+  isActive  Boolean   @default(true)
+  maxUses   Int?
+  usesCount Int       @default(0)
+  createdAt DateTime  @default(now())
+  bookings  Booking[]
+}

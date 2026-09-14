@@ -1,0 +1,17 @@
+[Unit]
+Description=Mahalla Cinema (Next.js app + Telegram bot, in-process)
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+# Single instance only: instrumentation.ts starts a long-polling Telegram bot
+# in-process — a second instance (or a restart while the old one is still
+# stopping) would double-poll the same bot token. Keep Type=simple, no forking.
+WorkingDirectory=/home/MahallaCinema
+EnvironmentFile=/home/MahallaCinema/.env
+ExecStart=/usr/bin/npm run start
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
