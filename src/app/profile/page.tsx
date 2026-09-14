@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { ChevronRight, Heart, HelpCircle, Info } from "lucide-react";
+import { ChevronRight, Heart, HelpCircle } from "lucide-react";
 import { getCurrentUser } from "@/lib/telegram-auth";
 import { notFound } from "next/navigation";
 import AuthPending from "@/components/AuthPending";
@@ -25,14 +25,13 @@ export default async function ProfilePage() {
   const menuItems = [
     { icon: <Heart size={20} className="text-[#e94553]" />, label: "Избранное", href: "/profile/favorites" },
     { icon: <HelpCircle size={20} className="text-[#e94553]" />, label: "Помощь и поддержка", href: "/help" },
-    { icon: <Info size={20} className="text-[#e94553]" />, label: "О приложении", href: "#" },
   ];
 
   const initial = (user.firstName || "?").trim().charAt(0).toUpperCase();
   const cardNumber = formatCardNumber(getCardNumber(user.telegramId));
 
   return (
-    <main className="min-h-screen pb-20 pt-28 px-4 bg-[#0a0404]">
+    <main className="min-h-screen pb-20 pt-6 px-4">
 
       {/* Фото и имя */}
       <div className="flex flex-col items-center mb-6">

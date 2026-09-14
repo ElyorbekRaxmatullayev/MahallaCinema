@@ -27,7 +27,7 @@ export default function RootLayout({
       <head>
         <script src="https://telegram.org/js/telegram-web-app.js" async />
       </head>
-      <body className="min-h-full flex flex-col bg-[#0a0404]">
+      <body className="min-h-full flex flex-col">
         <TelegramAuthBootstrap />
         <Header />
         <div className="flex-1 w-full max-w-[600px] mx-auto pb-24">

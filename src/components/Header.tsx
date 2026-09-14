@@ -8,7 +8,7 @@ export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
 
-  if (pathname.startsWith("/movie/")) {
+  if (pathname.startsWith("/movie/") || pathname === "/profile") {
     return null;
   }
 
@@ -17,7 +17,7 @@ export default function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0404] via-[#0a0404]/90 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-[#0a0404]/95 backdrop-blur-md border-b border-white/5 pointer-events-none" />
       
       <div className="relative max-w-md mx-auto px-4 pt-8 pb-4 flex justify-between items-center min-h-[80px] pointer-events-auto">
         {/* Left Action (Back Button for Book page) */}

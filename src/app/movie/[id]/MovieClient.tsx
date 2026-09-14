@@ -26,7 +26,7 @@ export default function MovieClient({ event }: { event: EventData }) {
   const isPast = isEventPast(event.date, event.time);
 
   return (
-    <main className="min-h-screen pb-24 bg-[#0a0404]">
+    <main className="min-h-screen pb-24">
       <div className="relative h-[360px] w-full flex items-center justify-center overflow-hidden">
         {event.posterUrl ? (
           <>

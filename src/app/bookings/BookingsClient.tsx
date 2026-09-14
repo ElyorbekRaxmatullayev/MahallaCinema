@@ -125,7 +125,18 @@ export default function BookingsClient({ bookings }: { bookings: BookingRow[] })
       </div>
 
       <div className="flex flex-col gap-4">
-        {filtered.length === 0 && <div className="text-center text-gray-500 py-10">Нет бронирований</div>}
+        {filtered.length === 0 && (
+          <div className="flex justify-center py-6">
+            <Image
+              src={withBasePath("/logos/no-bookings.png")}
+              alt="Нет бронирований"
+              width={220}
+              height={220}
+              className="object-contain w-full max-w-[220px] h-auto"
+              unoptimized
+            />
+          </div>
+        )}
 
         {filtered.map((booking) => {
           const meta = STATUS_META[booking.status] ?? STATUS_META.CONFIRMED;
