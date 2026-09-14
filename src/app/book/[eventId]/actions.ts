@@ -21,7 +21,7 @@ export interface ConfirmBookingInput {
   promoCode?: string;
   customerName: string;
   customerPhone: string;
-  provider?: "CLICK" | "PAYME";
+  provider?: "CLICK" | "UZUM" | "CASH";
 }
 
 export async function confirmBooking(input: ConfirmBookingInput) {
@@ -72,11 +72,13 @@ export async function confirmBooking(input: ConfirmBookingInput) {
       actualPaid = rawTotal - bonusDeduction;
     }
 
-    if (actualPaid > 0 && provider !== "CLICK" && provider !== "PAYME") {
+    if (actualPaid > 0 && provider !== "CLICK" && provider !== "UZUM" && provider !== "CASH") {
       return { success: false, error: "Выберите способ оплаты" };
     }
 
     const needsPayment = actualPaid > 0;
+    // Cash is settled at the venue — no Telegram invoice, seat confirmed right away.
+    const needsOnlinePayment = needsPayment && provider !== "CASH";
 
     const booking = await prisma.$transaction(async (tx) => {
       // Guarded conditional update — only succeeds if there is still enough
@@ -84,7 +86,7 @@ export async function confirmBooking(input: ConfirmBookingInput) {
       // plain read above and this decrement under concurrent bookings.
       if (!(await reserveInventory(tx, eventId, zone, quantity))) throw new SeatsUnavailableError();
 
-      if (!needsPayment) {
+      if (!needsOnlinePayment) {
         // Nothing to pay — apply promo/bonus effects immediately, exactly like before this feature existed.
         if (bonusDeduction > 0) {
           await tx.user.update({ where: { id: user.id }, data: { balance: { decrement: bonusDeduction } } });
@@ -112,16 +114,16 @@ export async function confirmBooking(input: ConfirmBookingInput) {
           promoCodeId: promo?.id,
           customerName,
           customerPhone,
-          status: needsPayment ? "AWAITING_PAYMENT" : "CONFIRMED",
+          status: needsOnlinePayment ? "AWAITING_PAYMENT" : "CONFIRMED",
           provider: needsPayment ? provider : null,
           // Bonus deduction is only snapshotted here (not applied to balance)
           // when payment is still pending — applied for real once payment succeeds.
-          bonusApplied: needsPayment ? bonusDeduction : 0,
+          bonusApplied: needsOnlinePayment ? bonusDeduction : 0,
         },
       });
     });
 
-    if (needsPayment) {
+    if (needsOnlinePayment) {
       const zoneLabel = ZONE_LABELS[zone] ?? zone;
       try {
         await sendBookingInvoice({
@@ -131,7 +133,7 @@ export async function confirmBooking(input: ConfirmBookingInput) {
           description: `${zoneLabel} x${quantity}. Имя: ${customerName}. Тел: ${customerPhone}`,
           amount: actualPaid,
           posterUrl: event.posterUrl,
-          provider: provider as "CLICK" | "PAYME",
+          provider: provider as "CLICK" | "UZUM",
         });
       } catch (err) {
         console.error("[booking] failed to send invoice, releasing reservation:", err);

@@ -10,10 +10,14 @@ import {
   togglePromoCode,
   deletePromoCode,
   adjustUserBalance,
+  adjustBalanceByCard,
 } from "./actions";
 import { uploadFile } from "@/lib/upload";
 import Dropdown from "@/components/Dropdown";
+import DatePicker from "@/components/DatePicker";
+import TimePicker from "@/components/TimePicker";
 import QrScanner from "@/components/QrScanner";
+import { getCardNumber, formatCardNumber } from "@/lib/card";
 
 interface EventStat {
   id: string;
@@ -129,6 +133,70 @@ function UserBalanceControl({ userId }: { userId: string }) {
   );
 }
 
+function CardBalanceControl() {
+  const [cardNumber, setCardNumber] = useState("");
+  const [amount, setAmount] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
+
+  const handleAdjust = async (sign: 1 | -1) => {
+    const value = parseInt(amount, 10);
+    if (!cardNumber.trim() || !value || value <= 0) return;
+    setBusy(true);
+    setMessage(null);
+    const res = await adjustBalanceByCard(cardNumber, value * sign);
+    setBusy(false);
+    if (res?.success) {
+      setMessage({ ok: true, text: `Готово: ${res.userName}` });
+      setCardNumber("");
+      setAmount("");
+    } else {
+      setMessage({ ok: false, text: res?.error || "Ошибка" });
+    }
+  };
+
+  return (
+    <div className="bg-[#140c0c] p-4 rounded-2xl border border-white/5 mb-8">
+      <h2 className="text-lg font-bold text-white mb-4">Баланс по номеру карты</h2>
+      <div className="flex flex-col gap-3">
+        <input
+          type="text"
+          value={cardNumber}
+          onChange={(e) => setCardNumber(e.target.value)}
+          placeholder="Номер карты"
+          className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white"
+        />
+        <div className="flex items-center gap-2">
+          <input
+            type="number"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="Сумма"
+            className="flex-1 min-w-0 bg-white/5 border border-white/10 rounded-xl p-3 text-white"
+          />
+          <button
+            onClick={() => handleAdjust(1)}
+            disabled={busy || !amount || !cardNumber.trim()}
+            className="bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/20 px-4 py-3 rounded-xl text-sm font-medium disabled:opacity-40 flex-shrink-0"
+          >
+            Начислить
+          </button>
+          <button
+            onClick={() => handleAdjust(-1)}
+            disabled={busy || !amount || !cardNumber.trim()}
+            className="bg-red-500/10 text-red-400 border border-red-500/20 px-4 py-3 rounded-xl text-sm font-medium disabled:opacity-40 flex-shrink-0"
+          >
+            Списать
+          </button>
+        </div>
+        {message && (
+          <div className={`text-sm ${message.ok ? "text-green-400" : "text-red-400"}`}>{message.text}</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function AdminClient({
   events,
   users,
@@ -149,10 +217,14 @@ export default function AdminClient({
   const [isUploading, setIsUploading] = useState(false);
   const [posterUrl, setPosterUrl] = useState("");
   const [eventType, setEventType] = useState("КИНО");
+  const [eventDate, setEventDate] = useState("");
+  const [eventTime, setEventTime] = useState("");
 
   // Broadcast form state
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [broadcastPhotoUrl, setBroadcastPhotoUrl] = useState("");
+  const [broadcastDate, setBroadcastDate] = useState("");
+  const [broadcastTime, setBroadcastTime] = useState("");
 
   // Promo code form state
   const [promoType, setPromoType] = useState("PERCENT");
@@ -213,6 +285,8 @@ export default function AdminClient({
                 await addEvent(formData);
                 setPosterUrl("");
                 setEventType("КИНО");
+                setEventDate("");
+                setEventTime("");
               }}
               className="flex flex-col gap-4"
             >
@@ -221,11 +295,11 @@ export default function AdminClient({
 
               <div className="flex gap-4">
                 <Dropdown className="w-1/2" name="type" value={eventType} onChange={setEventType} options={EVENT_TYPE_OPTIONS} />
-                <input type="date" name="date" required className="w-1/2 bg-white/5 border border-white/10 rounded-xl p-3 text-white" />
+                <DatePicker className="w-1/2" name="date" value={eventDate} onChange={setEventDate} />
               </div>
 
               <div className="flex gap-4">
-                <input type="time" name="time" required className="w-1/2 bg-white/5 border border-white/10 rounded-xl p-3 text-white" />
+                <TimePicker className="w-1/2" name="time" value={eventTime} onChange={setEventTime} />
               </div>
 
               <div>
@@ -304,12 +378,15 @@ export default function AdminClient({
 
       {activeTab === "users" && (
         <div>
+          <CardBalanceControl />
+
           <h2 className="text-lg font-bold text-white mb-4">Пользователи</h2>
           <div className="flex flex-col gap-3">
             {users.map((u) => (
               <div key={u.id} className="bg-[#140c0c] border border-white/5 p-4 rounded-xl">
                 <div className="text-white font-bold">{u.firstName || "Без имени"}</div>
                 <div className="text-sm text-gray-400">ID: {u.telegramId}</div>
+                <div className="text-xs text-gray-500 font-mono mt-0.5">{formatCardNumber(getCardNumber(u.telegramId))}</div>
                 <div className="text-sm text-[#ffb4b9] mt-1">Баланс: {u.balance.toLocaleString("ru-RU")} сум</div>
                 <div className="text-xs text-gray-500 mt-2">Бронирований: {u.bookings.length}</div>
                 <UserBalanceControl userId={u.id} />
@@ -411,8 +488,11 @@ export default function AdminClient({
             <h2 className="text-lg font-bold text-white mb-4">Новая рассылка</h2>
             <form
               action={async (formData) => {
+                formData.set("scheduledAt", `${broadcastDate}T${broadcastTime}`);
                 await queueNotification(formData);
                 setBroadcastPhotoUrl("");
+                setBroadcastDate("");
+                setBroadcastTime("");
               }}
               className="flex flex-col gap-4"
             >
@@ -429,10 +509,17 @@ export default function AdminClient({
 
               <div>
                 <label className="block text-sm text-gray-400 mb-2">Дата уведомления</label>
-                <input type="datetime-local" name="scheduledAt" required className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white" />
+                <div className="flex gap-4">
+                  <DatePicker className="w-1/2" value={broadcastDate} onChange={setBroadcastDate} />
+                  <TimePicker className="w-1/2" value={broadcastTime} onChange={setBroadcastTime} />
+                </div>
               </div>
 
-              <button type="submit" className="w-full bg-[#8a1f26] text-white font-bold py-3 rounded-xl mt-2">
+              <button
+                type="submit"
+                disabled={!broadcastDate || !broadcastTime}
+                className="w-full bg-[#8a1f26] text-white font-bold py-3 rounded-xl mt-2 disabled:opacity-40"
+              >
                 Отправить
               </button>
             </form>

@@ -12,8 +12,8 @@ function getAppUrl(): string {
   return (process.env.APP_URL || "http://localhost:3000").replace(/\/$/, "");
 }
 
-function getProviderToken(provider: "CLICK" | "PAYME"): string {
-  const token = provider === "CLICK" ? process.env.CLICK_Terminal : process.env.Payme_Terminal;
+function getProviderToken(provider: "CLICK" | "UZUM"): string {
+  const token = provider === "CLICK" ? process.env.CLICK_Terminal : process.env.Uzum_Terminal;
   if (!token) throw new Error(`Provider token for ${provider} is not set`);
   return token;
 }
@@ -206,7 +206,7 @@ export async function sendBookingInvoice(params: {
   description: string;
   amount: number;
   posterUrl?: string | null;
-  provider: "CLICK" | "PAYME";
+  provider: "CLICK" | "UZUM";
 }) {
   const b = getBot();
   const providerToken = getProviderToken(params.provider);

@@ -151,20 +151,24 @@ export default function BookingsClient({ bookings }: { bookings: BookingRow[] })
 
                   <h4 className="text-white font-bold text-[15px] mb-2 leading-tight">{booking.event.title}</h4>
 
-                  <div className="flex justify-between text-xs text-gray-400">
-                    <div className="flex flex-col gap-1.5">
+                  <div className="flex justify-between gap-2 text-xs text-gray-400">
+                    <div className="flex flex-col gap-1.5 min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <Calendar size={12} />
-                        {new Date(booking.event.date).toLocaleDateString("ru-RU", { day: "numeric", month: "long" })}
+                        <Calendar size={12} className="flex-shrink-0" />
+                        <span className="truncate">
+                          {new Date(booking.event.date).toLocaleDateString("ru-RU", { day: "numeric", month: "long" })}
+                        </span>
                       </div>
                       <div className="flex items-center gap-1.5">
-                        <Clock size={12} />
+                        <Clock size={12} className="flex-shrink-0" />
                         {booking.event.time}
                       </div>
                     </div>
-                    <div className="flex flex-col gap-1.5 text-right items-end">
-                      <span>Заказ №{booking.id.slice(-6).toUpperCase()}</span>
-                      <span>{new Date(booking.createdAt).toLocaleString("ru-RU")}</span>
+                    <div className="flex flex-col gap-1.5 text-right items-end min-w-0 flex-shrink-0">
+                      <span className="truncate">№{booking.id.slice(-6).toUpperCase()}</span>
+                      <span className="truncate">
+                        {new Date(booking.createdAt).toLocaleDateString("ru-RU", { day: "numeric", month: "numeric" })}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -174,23 +178,23 @@ export default function BookingsClient({ bookings }: { bookings: BookingRow[] })
 
               <div className="w-full border-t border-dashed border-white/10 mb-4" />
 
-              <div className="flex items-center justify-between">
-                <div className="flex flex-col">
+              <div className="flex items-center justify-between flex-wrap gap-y-2 gap-x-2">
+                <div className="flex flex-col min-w-0">
                   <span className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Зона</span>
-                  <div className="flex items-center gap-1.5 text-white text-sm font-medium">
-                    <div className="w-6 h-6 rounded-md bg-white/5 flex items-center justify-center">
+                  <div className="flex items-center gap-1.5 text-white text-sm font-medium min-w-0">
+                    <div className="w-6 h-6 rounded-md bg-white/5 flex items-center justify-center flex-shrink-0">
                       <Ticket size={12} className="text-gray-400" />
                     </div>
-                    <div>
-                      <div>{ZONE_LABELS[booking.zone] ?? booking.zone}</div>
+                    <div className="min-w-0">
+                      <div className="truncate">{ZONE_LABELS[booking.zone] ?? booking.zone}</div>
                       <div className="text-[10px] text-gray-400 font-normal">x{booking.quantity}</div>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex flex-col text-right">
+                <div className="flex flex-col text-right flex-shrink-0">
                   <span className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Сумма</span>
-                  <div className="text-white font-bold flex items-center gap-2">
+                  <div className="text-white font-bold flex items-center gap-2 whitespace-nowrap">
                     {booking.totalPrice.toLocaleString("ru-RU")} <span className="text-xs text-gray-400 font-normal">сум</span>
                   </div>
                 </div>
@@ -198,7 +202,7 @@ export default function BookingsClient({ bookings }: { bookings: BookingRow[] })
                 {booking.qrDataUrl && (
                   <button
                     onClick={() => setQrBooking(booking)}
-                    className="flex items-center gap-1.5 bg-[#8a1f26]/10 border border-[#8a1f26]/40 text-[#ffb4b9] px-3 py-2 rounded-xl text-xs font-medium hover:bg-[#8a1f26]/20"
+                    className="flex items-center gap-1.5 bg-[#8a1f26]/10 border border-[#8a1f26]/40 text-[#ffb4b9] px-3 py-2 rounded-xl text-xs font-medium hover:bg-[#8a1f26]/20 flex-shrink-0"
                   >
                     <QrCode size={16} />
                     QR-код

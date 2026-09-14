@@ -59,7 +59,7 @@ model Booking {
   promoCode        PromoCode? @relation(fields: [promoCodeId], references: [id])
   customerName     String?
   customerPhone    String?
-  provider         String?    // "CLICK" | "PAYME", null when no invoice was needed
+  provider         String?    // "CLICK" | "UZUM" | "CASH", null when no payment was needed
   bonusApplied     Int        @default(0) // snapshotted at reservation, applied to User.balance only on successful_payment
   telegramChargeId String?
   providerChargeId String?

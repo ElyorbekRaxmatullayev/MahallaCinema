@@ -12,6 +12,8 @@
 html, body {
   background-color: var(--background) !important;
   color: var(--foreground);
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 .glass {

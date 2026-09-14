@@ -2,16 +2,19 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Ticket, Info, Users, AlertCircle, Tag, Check, X, User as UserIcon, Phone, CreditCard } from "lucide-react";
 import { confirmBooking } from "./actions";
 import { checkPromoCode } from "./promo-actions";
 import { isEventPast } from "@/lib/event-time";
+import { withBasePath } from "@/lib/paths";
 
 const CASHBACK_MIN_BALANCE = 10000;
 
-const PAYMENT_PROVIDERS: { id: "CLICK" | "PAYME"; label: string }[] = [
-  { id: "CLICK", label: "Click" },
-  { id: "PAYME", label: "Payme" },
+const PAYMENT_PROVIDERS: { id: "CLICK" | "UZUM" | "CASH"; label: string; logo: string }[] = [
+  { id: "CLICK", label: "Click", logo: "/logos/click.png" },
+  { id: "UZUM", label: "Uzum", logo: "/logos/uzum.png" },
+  { id: "CASH", label: "Наличными", logo: "/logos/cash.png" },
 ];
 
 interface EventData {
@@ -33,7 +36,7 @@ export default function BookClient({ event, userBalance }: { event: EventData; u
   const [selectedZone, setSelectedZone] = useState("pouf");
   const [quantity, setQuantity] = useState(1);
   const [useBonuses, setUseBonuses] = useState(false);
-  const [provider, setProvider] = useState<"CLICK" | "PAYME" | null>(null);
+  const [provider, setProvider] = useState<"CLICK" | "UZUM" | "CASH" | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -300,20 +303,23 @@ export default function BookClient({ event, userBalance }: { event: EventData; u
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-4">
             <CreditCard size={20} className="text-[#8a1f26]" />
-            <h2 className="text-lg font-bold text-white">Оплатить картой</h2>
+            <h2 className="text-lg font-bold text-white">Способ оплаты</h2>
           </div>
-          <div className="flex gap-3">
+          <div className="grid grid-cols-3 gap-2">
             {PAYMENT_PROVIDERS.map((p) => (
               <button
                 key={p.id}
                 onClick={() => setProvider(p.id)}
-                className={`flex-1 p-4 rounded-xl border text-center font-bold transition-all ${
+                className={`flex flex-col items-center gap-2 p-3 rounded-xl border text-center transition-all min-w-0 ${
                   provider === p.id
-                    ? "bg-[#2d0a0d] border-[#8a1f26] text-white"
-                    : "bg-[#140c0c] border-white/5 text-gray-400 hover:border-white/10"
+                    ? "bg-[#2d0a0d] border-[#8a1f26]"
+                    : "bg-[#140c0c] border-white/5 hover:border-white/10"
                 }`}
               >
-                {p.label}
+                <Image src={withBasePath(p.logo)} alt={p.label} width={36} height={36} className="object-contain h-9 w-auto" unoptimized />
+                <span className={`text-[11px] font-medium truncate ${provider === p.id ? "text-white" : "text-gray-400"}`}>
+                  {p.label}
+                </span>
               </button>
             ))}
           </div>

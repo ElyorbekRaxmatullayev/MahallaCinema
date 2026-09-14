@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/telegram-auth";
+import { resolveTelegramIdFromCardNumber } from "@/lib/card";
 
 export async function addEvent(data: FormData) {
   if (!(await requireAdmin())) return;
@@ -121,4 +122,23 @@ export async function adjustUserBalance(userId: string, amount: number) {
   });
 
   revalidatePath("/admin");
+}
+
+export async function adjustBalanceByCard(cardNumber: string, amount: number) {
+  if (!(await requireAdmin())) return { success: false, error: "Доступ запрещён" };
+  if (!Number.isFinite(amount) || amount === 0) return { success: false, error: "Некорректная сумма" };
+
+  const telegramId = resolveTelegramIdFromCardNumber(cardNumber);
+  if (!telegramId) return { success: false, error: "Неверный номер карты" };
+
+  const user = await prisma.user.findUnique({ where: { telegramId } });
+  if (!user) return { success: false, error: "Пользователь с такой картой не найден" };
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { balance: Math.max(0, user.balance + amount) },
+  });
+
+  revalidatePath("/admin");
+  return { success: true, userName: user.firstName || "Без имени" };
 }
