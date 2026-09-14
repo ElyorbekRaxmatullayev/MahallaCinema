@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Clock, ChevronRight } from "lucide-react";
+import { Clock } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import FavoriteButton from "@/components/FavoriteButton";
 import { getCurrentUser } from "@/lib/telegram-auth";
@@ -31,31 +31,11 @@ export default async function Home() {
   const favoriteIds = user?.favorites.map(f => f.eventId) || [];
 
   return (
-    <main className="min-h-screen pb-20">
-      <section className="relative w-full h-[280px]">
-        {/* Hero Background Image */}
-        <Image
-          src={withBasePath("/hero-bg.png")}
-          alt="Mahalla Cinema"
-          fill
-          className="object-cover"
-          priority
-          unoptimized={true}
-        />
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0404] via-[#0a0404]/50 to-transparent" />
-        
-        <div className="absolute inset-0 flex flex-col items-center justify-end pb-8 px-4 text-center">
-          <p className="text-gray-300 text-sm max-w-[280px] leading-relaxed">
-            Кино под звёздами, футбол на большом экране и атмосфера, которую хочется повторить.
-          </p>
-        </div>
-      </section>
-
+    <main className="min-h-screen pb-20 pt-20">
       <div className="px-4">
-        {/* Weekly Schedule Header */}
-        <div className="flex items-center justify-between mb-4 mt-2">
-          <h2 className="text-xl font-bold text-white">Афиша недели</h2>
+        {/* Weekly Schedule Header — stands where the app-bar/hero used to be */}
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-2xl font-bold text-white">Афиша недели</h1>
         </div>
 
         {/* Event Cards */}

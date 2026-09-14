@@ -91,7 +91,7 @@ export default function BookingsClient({ bookings }: { bookings: BookingRow[] })
   const filtered = bookings.filter((b) => activeTabDef.statuses.includes(b.status));
 
   return (
-    <main className="min-h-screen pb-20 pt-28 px-4">
+    <main className="min-h-screen pb-20 pt-20 px-4">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-white mb-2">Мои бронирования</h1>
         <p className="text-sm text-gray-300">

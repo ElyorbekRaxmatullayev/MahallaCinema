@@ -258,7 +258,7 @@ export default function AdminClient({
   };
 
   return (
-    <div className="min-h-screen p-4 pt-28">
+    <div className="min-h-screen p-4 pt-20">
       <h1 className="text-2xl font-bold text-white mb-6">Админ панель</h1>
 
       {/* Tabs */}

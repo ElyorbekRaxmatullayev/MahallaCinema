@@ -31,7 +31,7 @@ export default function AfishaClient({ events, favoriteIds }: { events: any[], f
   const dateStr = `${activeDateObj.day} / ${activeDateObj.date} ${activeDateObj.month}`;
 
   return (
-    <main className="min-h-screen pb-20 pt-28 px-4">
+    <main className="min-h-screen pb-20 pt-20 px-4">
       <div className="flex items-center justify-between mb-4">
         <div>
           <h1 className="text-2xl font-bold text-white">Афиша</h1>
@@ -42,21 +42,20 @@ export default function AfishaClient({ events, favoriteIds }: { events: any[], f
         </div>
       </div>
 
-      {/* Days Scroll */}
-      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide mb-4 -mx-4 px-4">
+      {/* Days — all 7 fit in one row, no scroll needed */}
+      <div className="grid grid-cols-7 gap-1.5 mb-5">
         {weekDays.map((d, i) => (
           <button
             key={i}
             onClick={() => setActiveDateObj(d)}
-            className={`flex-shrink-0 flex flex-col items-center justify-center w-[72px] h-[90px] rounded-2xl transition-all ${
+            className={`flex flex-col items-center justify-center gap-0.5 py-2.5 rounded-xl transition-all ${
               activeDateObj.date === d.date
-                ? "bg-[#2d0a0d] border border-[#8a1f26] text-white" 
+                ? "bg-[#8a1f26] text-white shadow-[0_0_14px_rgba(138,31,38,0.45)]"
                 : "bg-[#140c0c] border border-white/5 text-gray-400"
             }`}
           >
-            <span className="text-sm mb-1">{d.day}</span>
-            <span className={`text-2xl font-bold mb-1 ${activeDateObj.date === d.date ? "text-white" : ""}`}>{d.date}</span>
-            <span className="text-xs">{d.month}</span>
+            <span className="text-[10px] uppercase tracking-wide">{d.day}</span>
+            <span className="text-lg font-bold leading-none">{d.date}</span>
           </button>
         ))}
       </div>

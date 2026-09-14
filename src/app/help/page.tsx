@@ -3,7 +3,7 @@ import { ChevronLeft, MapPin, Phone, MessageCircle } from "lucide-react";
 
 export default function HelpPage() {
   return (
-    <main className="min-h-screen pt-28 pb-20 px-4">
+    <main className="min-h-screen pt-20 pb-20 px-4">
       <div className="flex items-center gap-4 mb-8 relative z-10">
         <h1 className="text-xl font-bold text-white">Помощь и поддержка</h1>
       </div>
