@@ -31,7 +31,7 @@ export default async function ProfilePage() {
   const cardNumber = formatCardNumber(getCardNumber(user.telegramId));
 
   return (
-    <main className="min-h-screen pb-20 pt-6 px-4">
+    <main className="min-h-screen pb-20 px-4 pt-[calc(var(--tg-safe-area-top,0px)+1.5rem)]">
 
       {/* Фото и имя */}
       <div className="flex flex-col items-center mb-6">

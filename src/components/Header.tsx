@@ -32,7 +32,7 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 z-50">
       <div className="absolute inset-0 bg-[var(--background)]/85 backdrop-blur-md border-b border-white/5" />
 
-      <div className="relative max-w-md mx-auto px-4 pt-8 pb-4 flex items-center gap-3 min-h-[80px]">
+      <div className="relative max-w-md mx-auto px-4 pb-4 flex items-center gap-3 min-h-[80px] pt-[calc(var(--tg-safe-area-top,0px)+2rem)]">
         <div className="w-9 flex-shrink-0">
           {showBack && (
             <button

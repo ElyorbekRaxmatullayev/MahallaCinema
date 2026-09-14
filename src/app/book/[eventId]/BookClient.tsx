@@ -132,7 +132,7 @@ export default function BookClient({ event, userBalance }: { event: EventData; u
   };
 
   return (
-    <main className="min-h-screen pt-28 pb-40 px-4">
+    <main className="min-h-screen pt-[calc(var(--tg-safe-area-top,0px)+7rem)] pb-40 px-4">
       {/* Event Info */}
       <div className="mb-8">
         <span className={`badge mb-3 ${event.isFootball ? 'badge-football' : 'badge-kino'}`}>

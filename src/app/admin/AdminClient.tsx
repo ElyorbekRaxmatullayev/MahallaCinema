@@ -258,7 +258,7 @@ export default function AdminClient({
   };
 
   return (
-    <div className="min-h-screen p-4 pt-28">
+    <div className="min-h-screen p-4 pt-[calc(var(--tg-safe-area-top,0px)+7rem)]">
       {/* Tabs */}
       <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
         {TABS.map((tab) => (

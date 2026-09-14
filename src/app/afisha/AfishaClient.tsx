@@ -31,7 +31,7 @@ export default function AfishaClient({ events, favoriteIds }: { events: any[], f
   const dateStr = `${activeDateObj.day} / ${activeDateObj.date} ${activeDateObj.month}`;
 
   return (
-    <main className="min-h-screen pb-20 pt-28 px-4">
+    <main className="min-h-screen pb-20 pt-[calc(var(--tg-safe-area-top,0px)+7rem)] px-4">
       <p className="text-sm text-gray-300 mb-4">
         Выберите день, чтобы посмотреть<br />
         сеансы и забронировать места
@@ -58,9 +58,15 @@ export default function AfishaClient({ events, favoriteIds }: { events: any[], f
       {/* Schedule List */}
       <div className="flex flex-col gap-6">
         {filteredEvents.length === 0 && (
-          <div className="text-center text-gray-400 py-20 px-4 bg-[#140c0c] rounded-2xl border border-white/5 shadow-inner mt-4">
-            <span className="block text-4xl mb-3">🍿</span>
-            Фильмов пока не имеется, ожидайте
+          <div className="flex justify-center py-6">
+            <Image
+              src={withBasePath("/logos/no-films.png")}
+              alt="Фильмов пока не имеется"
+              width={220}
+              height={220}
+              className="object-contain w-full max-w-[220px] h-auto"
+              unoptimized
+            />
           </div>
         )}
         
