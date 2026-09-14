@@ -1,4 +1,5 @@
 import { Bot, InlineKeyboard, InputFile } from "grammy";
+import { SocksProxyAgent } from "socks-proxy-agent";
 import path from "path";
 import { isAdminTelegramId } from "@/lib/telegram-auth";
 import { prisma } from "@/lib/prisma";
@@ -76,10 +77,23 @@ async function applySuccessfulPayment(payload: string, telegramChargeId: string,
   });
 }
 
+/**
+ * Telegram's API is blocked/throttled from this server's network, so all bot
+ * traffic (including long-polling's getUpdates) is routed through a SOCKS5
+ * proxy when TELEGRAM_PROXY_URL is set. grammy uses node-fetch on Node.js
+ * (see grammy/out/shim.node.js), which — unlike native fetch — accepts a
+ * plain http.Agent, so SocksProxyAgent plugs in directly.
+ */
+function getProxyAgent(): SocksProxyAgent | undefined {
+  const proxyUrl = process.env.TELEGRAM_PROXY_URL;
+  return proxyUrl ? new SocksProxyAgent(proxyUrl) : undefined;
+}
+
 export function getBot(): Bot {
   if (bot) return bot;
 
-  bot = new Bot(process.env.BOT_TOKEN!);
+  const agent = getProxyAgent();
+  bot = new Bot(process.env.BOT_TOKEN!, agent ? { client: { baseFetchConfig: { agent } } } : undefined);
 
   bot.command("start", async (ctx) => {
     const telegramId = String(ctx.from?.id ?? "");
