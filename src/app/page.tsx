@@ -31,7 +31,7 @@ export default async function Home() {
   const favoriteIds = user?.favorites.map(f => f.eventId) || [];
 
   return (
-    <main className="min-h-screen pb-20 pt-28">
+    <main className="min-h-screen pb-20 pt-24">
       <div className="px-4">
         {/* Event Cards */}
         <div className="flex flex-col gap-3 mb-6">

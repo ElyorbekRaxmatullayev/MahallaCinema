@@ -132,7 +132,7 @@ export default function BookClient({ event, userBalance }: { event: EventData; u
   };
 
   return (
-    <main className="min-h-screen pt-28 pb-40 px-4">
+    <main className="min-h-screen pt-24 pb-40 px-4">
       {/* Event Info */}
       <div className="mb-8">
         <span className={`badge mb-3 ${event.isFootball ? 'badge-football' : 'badge-kino'}`}>
@@ -310,16 +310,13 @@ export default function BookClient({ event, userBalance }: { event: EventData; u
               <button
                 key={p.id}
                 onClick={() => setProvider(p.id)}
-                className={`flex flex-col items-center gap-2 p-3 rounded-xl border text-center transition-all min-w-0 ${
+                className={`flex items-center justify-center p-3 rounded-xl border transition-all min-w-0 ${
                   provider === p.id
                     ? "bg-[#2d0a0d] border-[#8a1f26]"
                     : "bg-[#140c0c] border-white/5 hover:border-white/10"
                 }`}
               >
-                <Image src={withBasePath(p.logo)} alt={p.label} width={36} height={36} className="object-contain h-9 w-auto" unoptimized />
-                <span className={`text-[11px] font-medium truncate ${provider === p.id ? "text-white" : "text-gray-400"}`}>
-                  {p.label}
-                </span>
+                <Image src={withBasePath(p.logo)} alt={p.label} width={40} height={40} className="object-contain h-10 w-auto" unoptimized />
               </button>
             ))}
           </div>

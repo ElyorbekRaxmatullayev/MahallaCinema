@@ -4,9 +4,10 @@ import { ChevronLeft } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import NotificationBell from "@/components/NotificationBell";
 
-// Same background as the page itself (var(--background), blurred) instead of
-// the old solid near-black bar — and each route's own title instead of the
-// static "Mahalla Cinema" branding that used to sit there on every page.
+// .app-bg paints the identical background as the rest of the page (same
+// color + pattern, not a translucent overlay) — only the border-bottom line
+// marks this as a bar. Each route gets its own title instead of the static
+// "Mahalla Cinema" branding that used to sit there on every page.
 const PAGE_TITLES: Record<string, string> = {
   "/": "Афиша недели",
   "/afisha": "Афиша",
@@ -30,9 +31,9 @@ export default function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
-      <div className="absolute inset-0 bg-[var(--background)]/85 backdrop-blur-md border-b border-white/5" />
+      <div className="absolute inset-0 app-bg border-b border-white/10" />
 
-      <div className="relative max-w-md mx-auto px-4 pt-8 pb-4 flex items-center gap-3 min-h-[80px]">
+      <div className="relative max-w-md mx-auto px-4 pt-6 pb-3 flex items-center gap-3 min-h-[68px]">
         {showBack && (
           <button
             onClick={() => router.back()}

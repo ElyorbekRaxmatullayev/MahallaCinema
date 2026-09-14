@@ -7,23 +7,33 @@
 :root {
   --background: #200709;
   --foreground: #ffffff;
+  /* Subtle geometric motif over a dark maroon wash, echoing the logo's canvas-red
+     backdrop — flat black looked empty on pages without a hero image. Shared as a
+     variable so the header can paint the identical pattern (see .app-bg below). */
+  --app-pattern-image:
+    radial-gradient(ellipse 900px 500px at 50% -10%, rgba(138, 31, 38, 0.35), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.04' stroke-width='1'%3E%3Cpath d='M32 2 L62 32 L32 62 L2 32 Z'/%3E%3Ccircle cx='32' cy='32' r='12'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 html, body {
   background-color: var(--background) !important;
-  /* Subtle geometric motif over a dark maroon wash, echoing the logo's canvas-red
-     backdrop — flat black looked empty on pages without a hero image. */
-  background-image:
-    radial-gradient(ellipse 900px 500px at 50% -10%, rgba(138, 31, 38, 0.35), transparent 60%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.04' stroke-width='1'%3E%3Cpath d='M32 2 L62 32 L32 62 L2 32 Z'/%3E%3Ccircle cx='32' cy='32' r='12'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: var(--app-pattern-image);
   background-repeat: no-repeat, repeat;
   background-attachment: fixed, fixed;
   color: var(--foreground);
   overflow-x: hidden;
   max-width: 100vw;
-  /* Kill the elastic rubber-band bounce in Telegram's in-app browser — it made
-     short pages (profile, a thin home screen) wobble on a plain vertical swipe. */
-  overscroll-behavior-y: none;
+}
+
+/* Same paint as html/body above, including background-attachment: fixed —
+   so the pattern lines up pixel-for-pixel with whatever's underneath. Used
+   on the app-bar so it reads as "the same background, just with a bar
+   drawn on top" instead of a differently-colored strip. */
+.app-bg {
+  background-color: var(--background);
+  background-image: var(--app-pattern-image);
+  background-repeat: no-repeat, repeat;
+  background-attachment: fixed, fixed;
 }
 
 .glass {
