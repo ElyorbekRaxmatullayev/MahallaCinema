@@ -32,19 +32,17 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 z-50">
       <div className="absolute inset-0 bg-[var(--background)]/85 backdrop-blur-md border-b border-white/5" />
 
-      <div className="relative max-w-md mx-auto px-4 pb-4 flex items-center gap-3 min-h-[80px] pt-[calc(var(--tg-safe-area-top,0px)+2rem)]">
-        <div className="w-9 flex-shrink-0">
-          {showBack && (
-            <button
-              onClick={() => router.back()}
-              className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white backdrop-blur-md hover:bg-white/10 transition-colors"
-            >
-              <ChevronLeft size={20} className="mr-0.5" />
-            </button>
-          )}
-        </div>
+      <div className="relative max-w-md mx-auto px-4 pt-8 pb-4 flex items-center gap-3 min-h-[80px]">
+        {showBack && (
+          <button
+            onClick={() => router.back()}
+            className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white backdrop-blur-md hover:bg-white/10 transition-colors flex-shrink-0"
+          >
+            <ChevronLeft size={20} className="mr-0.5" />
+          </button>
+        )}
 
-        <h1 className="flex-1 text-white font-bold text-[18px] leading-tight truncate">{title}</h1>
+        <h1 className="flex-1 text-white font-bold text-xl leading-tight truncate">{title}</h1>
 
         <NotificationBell />
       </div>

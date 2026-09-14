@@ -40,7 +40,7 @@ export default function MovieClient({ event }: { event: EventData }) {
           <div className="absolute inset-0 bg-[#140c0c]" />
         )}
 
-        <div className="absolute left-4 z-20 flex items-center gap-4 top-[calc(var(--tg-safe-area-top,0px)+1rem)]">
+        <div className="absolute top-4 left-4 z-20 flex items-center gap-4">
           <button onClick={() => router.back()} className="w-10 h-10 bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/10 shadow-lg">
             <ChevronLeft size={24} />
           </button>

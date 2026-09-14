@@ -7,9 +7,6 @@
 :root {
   --background: #200709;
   --foreground: #ffffff;
-  /* Set from Telegram's WebApp safe-area insets once fullscreen mode is
-     active (TelegramAuthBootstrap.tsx) — 0 outside Telegram/before that runs. */
-  --tg-safe-area-top: 0px;
 }
 
 html, body {

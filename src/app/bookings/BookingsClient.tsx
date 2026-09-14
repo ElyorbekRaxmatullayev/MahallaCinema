@@ -91,7 +91,7 @@ export default function BookingsClient({ bookings }: { bookings: BookingRow[] })
   const filtered = bookings.filter((b) => activeTabDef.statuses.includes(b.status));
 
   return (
-    <main className="min-h-screen pb-20 pt-[calc(var(--tg-safe-area-top,0px)+7rem)] px-4">
+    <main className="min-h-screen pb-20 pt-28 px-4">
       <p className="text-sm text-gray-300 mb-6">
         Здесь вы можете посмотреть<br />
         все свои брони и их статус.

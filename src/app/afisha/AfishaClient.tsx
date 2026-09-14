@@ -31,7 +31,7 @@ export default function AfishaClient({ events, favoriteIds }: { events: any[], f
   const dateStr = `${activeDateObj.day} / ${activeDateObj.date} ${activeDateObj.month}`;
 
   return (
-    <main className="min-h-screen pb-20 pt-[calc(var(--tg-safe-area-top,0px)+7rem)] px-4">
+    <main className="min-h-screen pb-20 pt-28 px-4">
       <p className="text-sm text-gray-300 mb-4">
         Выберите день, чтобы посмотреть<br />
         сеансы и забронировать места
