@@ -4,10 +4,18 @@ import { ChevronLeft } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import NotificationBell from "@/components/NotificationBell";
 
-/**
- * No bar/title anymore — each page shows its own heading where the bar used
- * to be. Just the back button and notification bell float in the corners.
- */
+// Same background as the page itself (var(--background), blurred) instead of
+// the old solid near-black bar — and each route's own title instead of the
+// static "Mahalla Cinema" branding that used to sit there on every page.
+const PAGE_TITLES: Record<string, string> = {
+  "/": "Афиша недели",
+  "/afisha": "Афиша",
+  "/bookings": "Мои бронирования",
+  "/help": "Помощь и поддержка",
+  "/profile/favorites": "Избранное",
+  "/admin": "Админ панель",
+};
+
 export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
@@ -18,11 +26,14 @@ export default function Header() {
 
   const isBookPage = pathname.startsWith("/book/");
   const showBack = isBookPage || pathname === "/help" || pathname === "/profile/favorites";
+  const title = PAGE_TITLES[pathname] ?? (isBookPage ? "Бронирование" : "");
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
-      <div className="max-w-md mx-auto px-4 pt-8 flex justify-between items-center">
-        <div className="w-10 pointer-events-auto">
+    <header className="fixed top-0 left-0 right-0 z-50">
+      <div className="absolute inset-0 bg-[var(--background)]/85 backdrop-blur-md border-b border-white/5" />
+
+      <div className="relative max-w-md mx-auto px-4 pt-8 pb-4 flex items-center gap-3 min-h-[80px]">
+        <div className="w-9 flex-shrink-0">
           {showBack && (
             <button
               onClick={() => router.back()}
@@ -33,9 +44,9 @@ export default function Header() {
           )}
         </div>
 
-        <div className="pointer-events-auto">
-          <NotificationBell />
-        </div>
+        <h1 className="flex-1 text-white font-bold text-[18px] leading-tight truncate">{title}</h1>
+
+        <NotificationBell />
       </div>
     </header>
   );

@@ -31,16 +31,11 @@ export default function AfishaClient({ events, favoriteIds }: { events: any[], f
   const dateStr = `${activeDateObj.day} / ${activeDateObj.date} ${activeDateObj.month}`;
 
   return (
-    <main className="min-h-screen pb-20 pt-20 px-4">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Афиша</h1>
-          <p className="text-sm text-gray-300">
-            Выберите день, чтобы посмотреть<br />
-            сеансы и забронировать места
-          </p>
-        </div>
-      </div>
+    <main className="min-h-screen pb-20 pt-28 px-4">
+      <p className="text-sm text-gray-300 mb-4">
+        Выберите день, чтобы посмотреть<br />
+        сеансы и забронировать места
+      </p>
 
       {/* Days — all 7 fit in one row, no scroll needed */}
       <div className="grid grid-cols-7 gap-1.5 mb-5">

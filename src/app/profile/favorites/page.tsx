@@ -20,11 +20,7 @@ export default async function FavoritesPage() {
   const favorites = user?.favorites || [];
 
   return (
-    <main className="min-h-screen pb-20 pt-20 px-4">
-      <div className="flex items-center gap-4 mb-8 relative z-10">
-        <h1 className="text-xl font-bold text-white">Избранное</h1>
-      </div>
-
+    <main className="min-h-screen pb-20 pt-28 px-4">
       <div className="flex flex-col gap-3">
         {favorites.length === 0 && (
           <div className="text-center text-gray-400 py-10">

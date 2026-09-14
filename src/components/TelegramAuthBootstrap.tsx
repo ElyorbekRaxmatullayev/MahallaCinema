@@ -11,6 +11,7 @@ declare global {
         ready?: () => void;
         expand?: () => void;
         close?: () => void;
+        requestFullscreen?: () => void;
         initData?: string;
       };
     };
@@ -32,6 +33,9 @@ export default function TelegramAuthBootstrap() {
 
       webApp.ready?.();
       webApp.expand?.();
+      // Hides Telegram's own title bar (app name + ⋮ menu) on client versions
+      // that support Bot API 8.0+ fullscreen mode; a no-op elsewhere.
+      webApp.requestFullscreen?.();
 
       const initData = webApp.initData;
       if (!initData || didVerify.current) return true;

@@ -258,9 +258,7 @@ export default function AdminClient({
   };
 
   return (
-    <div className="min-h-screen p-4 pt-20">
-      <h1 className="text-2xl font-bold text-white mb-6">Админ панель</h1>
-
+    <div className="min-h-screen p-4 pt-28">
       {/* Tabs */}
       <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
         {TABS.map((tab) => (

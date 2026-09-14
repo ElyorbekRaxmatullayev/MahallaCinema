@@ -31,13 +31,8 @@ export default async function Home() {
   const favoriteIds = user?.favorites.map(f => f.eventId) || [];
 
   return (
-    <main className="min-h-screen pb-20 pt-20">
+    <main className="min-h-screen pb-20 pt-28">
       <div className="px-4">
-        {/* Weekly Schedule Header — stands where the app-bar/hero used to be */}
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold text-white">Афиша недели</h1>
-        </div>
-
         {/* Event Cards */}
         <div className="flex flex-col gap-3 mb-6">
           {events.length === 0 && (
